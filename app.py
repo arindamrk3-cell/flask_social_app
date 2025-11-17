@@ -19,19 +19,19 @@ app=Flask(__name__)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'arindamrk3@gmail.com'  # replace with your Gmail
-app.config['MAIL_PASSWORD'] = 'nmysrwcdlhefqwuh'     # use App Password, not Gmail password
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = 'arindamrk3@gmail.com'
 mail = Mail(app)
-UPLOAD_FOLDER='/tmp/uploads'##os.path.join('/var', 'uploads')
+UPLOAD_FOLDER='/tmp/uploads'     ##os.path.join('/var', 'uploads')
 os.makedirs(UPLOAD_FOLDER,exist_ok=True)
-app.config['UPLOAD_FOLDER']=os.path.join('static','uploads')
+app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER     ##os.path.join('static','uploads')
 app.config['ALLOWED_EXTENSIONS']={'png','jpg','jpeg','gif','mp4','mov','avi'}
 
 
-app.secret_key="arindam@1234"
+app.secret_key=os.environ.get('SECRET_KEY','fallback-secret')
 serializer = URLSafeTimedSerializer(app.secret_key)
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:////tmp/database.db'##+os.path.join(basedir,'database.db')
+app.config['SQLALCHEMY_DATABASE_URI']=os.environ.get('DATABASE_URL','sqlite:////tmp/database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -480,6 +480,8 @@ def logout():
     print("logged out")
     return redirect(url_for('login'))
 
+with app.app_context():
+    db.create_all()
 
 if __name__=='__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
