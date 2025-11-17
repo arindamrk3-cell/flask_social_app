@@ -2,8 +2,9 @@ Flask
 Flask-Mail
 Flask-SQLAlchemy
 Flask-Migrate
-Werkzeug
-email-validator
-gunicorn
 itsdangerous
-python-dotenv
+Werkzeug
+gunicorn
+Pillow
+SQLAlchemy
+flask-httpauth
