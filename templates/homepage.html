@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Media</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 70px 0 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h2 {
+      text-align: center;
+      color: #222;
+      margin-bottom: 15px;
+    }
+
+    .feed {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      padding: 0 15px;
+    }
+
+    .post {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+      /* grid-template-rows: repeat(2,1fr); */
+    }
+
+    .post-header i {
+      font-size: 1.5rem;
+      color: #007bff;
+      
+    }
+
+    .post-username {
+      font-weight: 600;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .media-container img,
+    .media-container video {
+      width: 100%;
+      display: block;
+      max-height: 400px;
+      object-fit: cover;
+    }
+
+    .caption {
+      padding: 10px 15px;
+      color: #444;
+      font-size: 0.95rem;
+    }
+
+    .date {
+      padding: 0 15px 15px;
+      font-size: 0.8rem;
+      color: #777;
+    }
+
+    
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: #777;
+      font-size: 0.8rem;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: color 0.3s;
+    }
+
+    .nav-item i {
+      font-size: 1.6rem;
+      margin-bottom: 3px;
+    }
+
+    .nav-item.active,
+    .nav-item:hover {
+      color: #007bff;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 15px;
+    }
+
+    .like-btn {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+    }
+
+    .likes-count {
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .pfp 
+    {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff;
+    background-image: url("static\\icons8-user-100.png"); 
+    background-size: cover;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>🌍 Explore Media</h2>
+
+  <div class="feed">
+    {% for media in media_files %}
+    <div class="post">
+
+      <div class="post-header">
+        <span class="post-username"><span>{{ media.user.username }}</span>
+        
+      </div>
+
+      <div class="media-container">
+        {% if media.filetype == 'image' %}
+        <img src="{{ url_for('static', filename='uploads/' + media.filename) }}" alt="{{ media.caption }}">
+        {% else %}
+        <video controls>
+          <source src="{{ url_for('static', filename='uploads/' + media.filename) }}" type="video/mp4">
+        </video>
+        {% endif %}
+      </div>
+
+      <div class="info">
+          <div class="caption"><b>{{ media.caption }}</b></div>
+          
+          <div class="date">📅 {{ media.upload_time.strftime('%b %d, %Y') }}</div>
+        </div>
+      
+      
+      <div class="actions">
+    <button class="like-btn" onclick="toggleLike({{ media.id }})" id="btn-{{ media.id }}">
+        {% if media.id in user_likes %}
+            ❤️
+        {% else %}
+            🤍
+        {% endif %}
+    </button>
+
+    <span id="likes-{{ media.id }}" class="likes-count">
+        {{ likes[media.id] }} likes
+    </span>
+</div>
+
+    </div>
+    {% else %}
+    <p style="text-align:center; color:#777;">No media uploaded yet.</p>
+    {% endfor %}
+  </div>
+
+  <!-- 🌈 Bottom Navbar -->
+  <div class="bottom-nav">
+    <a href="{{ url_for('homepage') }}" class="nav-item active">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <!-- <a href="{{ url_for('upload') }}" class="nav-item">
+      <i class="fas fa-plus-square"></i>
+      <span>Upload</span>
+    </a> -->
+    <a href="{{ url_for('profile') }}" class="nav-item">
+      <i class="fas fa-user-circle"></i>
+      <span>Account</span>
+    </a>
+  </div>
+  <script>
+  function toggleLike(mediaId) {
+      fetch(`/like/${mediaId}`, {
+          method: "POST"
+      })
+      .then(res => res.json())
+      .then(data => {
+          let btn = document.getElementById("btn-" + mediaId);
+          let likesCount = document.getElementById("likes-" + mediaId);
+
+          // Update icon
+          if (data.status === "liked") {
+              btn.innerHTML = "❤️";
+              likesCount.textContent = (parseInt(likesCount.textContent) + 1) + " likes";
+          } else {
+              btn.innerHTML = "🤍";
+              likesCount.textContent = (parseInt(likesCount.textContent) - 1) + " likes";
+          }
+      });
+  }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Uploads</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .media-card {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    img, video {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+
+    .caption {
+      margin-top: 8px;
+      color: #555;
+      font-size: 0.9em;
+    }
+
+    a.upload-link {
+      display: block;
+      text-align: center;
+      margin-bottom: 15px;
+      text-decoration: none;
+      background: #007bff;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    a.upload-link:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <a class="upload-link" href="{{ url_for('upload') }}">⬆ Upload More</a>
+  <h2>My Uploaded Media</h2>
+
+  <div class="gallery">
+    {% for media in media_files %}
+    <div class="media-card">
+      {% if media.filetype == 'image' %}
+        <img src="{{ url_for('static', filename='uploads/' + media.filename) }}" alt="{{ media.caption }}">
+      {% else %}
+        <video controls>
+          <source src="{{ url_for('static', filename='uploads/' + media.filename) }}" type="video/mp4">
+        </video>
+      {% endif %}
+      <div class="caption">{{ media.caption }}</div>
+    </div>
+    {% else %}
+    <p style="text-align:center;">No uploads yet.</p>
+    {% endfor %}
+
+    <button style="width: fit-content; height: fit-content;"><a href="{{url_for('homepage')}}">Home</a></button>
+  </div>
+</body>
+</html>

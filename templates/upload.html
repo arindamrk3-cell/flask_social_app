@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Media</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #dfe9f3, #ffffff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding-bottom: 80px; /* space for bottom nav */
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 380px;
+      text-align: center;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #007bff;
+      font-size: 1.5rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    input[type="file"],
+    input[type="text"] {
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 6px;
+      background: #f9f9f9;
+      font-size: 0.95rem;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Flash messages */
+    .flash {
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      color: white;
+      text-align: center;
+      font-size: 0.9rem;
+      animation: fadeSlide 0.3s ease-in-out;
+    }
+
+    .flash.success { background-color: #28a745; }
+    .flash.danger { background-color: #dc3545; }
+    .flash.info { background-color: #17a2b8; }
+    .flash.other { background-color: gray; }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 🌈 Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: #777;
+      font-size: 0.8rem;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: color 0.3s;
+    }
+
+    .nav-item i {
+      font-size: 1.6rem;
+      margin-bottom: 3px;
+    }
+
+    .nav-item.active, .nav-item:hover {
+      color: #007bff;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: 92%;
+        padding: 20px;
+      }
+      h2 {
+        font-size: 1.3rem;
+      }
+      input, button {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>📤 Upload Media</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div>
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" name="file" accept="image/*,video/*" required>
+      <input type="text" name="caption" placeholder="Add a caption (optional)">
+      <button type="submit">Upload</button>
+    </form>
+  </div>
+
+  <!-- 🌈 Bottom Navbar -->
+  <div class="bottom-nav">
+    <a href="{{ url_for('homepage') }}" class="nav-item">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="{{ url_for('upload') }}" class="nav-item active">
+      <i class="fas fa-plus-square"></i>
+      <span>Upload</span>
+    </a>
+    <a href="{{ url_for('profile') }}" class="nav-item">
+      <i class="fas fa-user-circle"></i>
+      <span>Account</span>
+    </a>
+  </div>
+
+  <script>
+    // Auto-hide flash messages
+    setTimeout(() => {
+      document.querySelectorAll('.flash')?.forEach(el => {
+        el.style.transition = "opacity 0.5s ease";
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 500);
+      });
+    }, 4000);
+  </script>
+</body>
+</html>
+

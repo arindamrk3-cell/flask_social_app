@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify OTP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    button {
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .flash {
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      color: white;
+      font-weight: 500;
+    }
+
+    .flash.success {
+      background: #28a745;
+    }
+
+    .flash.danger {
+      background: #dc3545;
+    }
+
+    .flash.info {
+      background: #17a2b8;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <h2>Verify OTP</h2>
+    <form method="POST">
+      <input type="text" name="otp" placeholder="Enter 6-digit OTP" maxlength="6" required>
+      <button type="submit">Verify</button>
+    </form>
+  </div>
+
+  <script>
+    // Auto-hide flash messages after 3 seconds
+    setTimeout(() => {
+      document.querySelectorAll('.flash').forEach(flash => {
+        flash.style.transition = "opacity 0.5s ease";
+        flash.style.opacity = '0';
+        setTimeout(() => flash.remove(), 500);
+      });
+    }, 3000);
+  </script>
+</body>
+</html>

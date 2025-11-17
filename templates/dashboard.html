@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #e8f0ff, #fefefe);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 480px;
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    p {
+      text-align: center;
+      color: #555;
+      margin-top: 0;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .link-row {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    form {
+      margin-top: 10px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 30px;
+      color: #333;
+    }
+
+    .note-card {
+      background: #f9fbff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 12px 15px;
+      margin: 10px 0;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      word-wrap: break-word;
+    }
+
+    .note-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .note-actions a {
+      font-size: 14px;
+    }
+
+    .empty {
+      text-align: center;
+      color: #888;
+      margin-top: 15px;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      input,
+      button {
+        font-size: 14px;
+      }
+
+      .note-card {
+        font-size: 15px;
+      }
+    }
+
+
+    .flash {
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      color: white;
+    }
+
+    .flash.success {
+      background-color: green;
+    }
+
+    .flash.danger {
+      background-color: red;
+    }
+
+    .flash.info {
+      background-color: skyblue;
+    }
+
+    .flash.other {
+      background-color: gray;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div style="margin-bottom:12px;">
+      {% for category, message in messages %}
+      {% if category == 'success' %}
+      <div class="flash success">{{ message }}</div>
+      {% elif category == 'danger' %}
+      <div class="flash danger">{{ message }}</div>
+      {% elif category == 'info' %}
+      <div class="flash info">{{ message }}</div>
+      {% else %}
+      <div class="flash other">{{ message }}</div>
+      {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <h1>Welcome, {{user.username}}</h1>
+    <p>City:  <strong>{{user.city}}</strong> </p>
+
+    <div class="link-row">
+      <a href="{{url_for('profile')}}">View Profile</a>
+      <a href="{{url_for('logout')}}">Logout</a>
+    </div>
+
+    <form method="POST">
+      <input type="text" name="title" placeholder="Title your note" required>
+      <input type="text" name="content" placeholder="Write your note.." required>
+      <button type="submit">Add Note</button>
+    </form>
+
+    <h2>Your Notes</h2>
+    {% if notes %}
+    {% for N in notes %}
+    <div class="note-card">
+      <strong>{{ N.title }}:</strong> {{ N.content }}
+      <div class="note-actions">
+        <a href="{{ url_for('edit_note', note_id=N.id) }}"><b>✏️ Edit</b></a>
+        <a href="{{ url_for('delete_note', note_id=N.id) }}" onclick="return confirm('Are you sure?');"
+          style="color:red;"><b>🗑️ Delete</b></a>
+      </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="empty">📝 No notes yet. Add one!</p>
+    {% endif %}
+  </div>
+</body>
+<script>
+  setTimeout(() => {
+    document.querySelectorAll('.flash')?.forEach(el => {
+      el.style.transition = "opacity 0.5s ease";
+      el.style.opacity = '0';
+      setTimeout(() => el.remove(), 500);
+    });
+  }, 4000);
+</script>
+
+</html>

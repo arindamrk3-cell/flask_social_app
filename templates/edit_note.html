@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Note</title>
+  <style>
+    body {
+      background-color: aliceblue;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .card {
+      background-color: antiquewhite;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 2px 2px 6px gray;
+      text-align: center;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      border: 1px solid gray;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: lightseagreen;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background-color: seagreen;
+    }
+
+    a {
+      color: darkblue;
+      text-decoration: none;
+      margin-top: 10px;
+      display: inline-block;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .flash {
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      color: white;
+    }
+
+    .flash.success {
+      background-color: green;
+    }
+
+    .flash.danger {
+      background-color: red;
+    }
+
+    .flash.info {
+      background-color: skyblue;
+    }
+
+    .flash.other {
+      background-color: gray;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div style="margin-bottom:12px;">
+      {% for category, message in messages %}
+      {% if category == 'success' %}
+      <div class="flash success">{{ message }}</div>
+      {% elif category == 'danger' %}
+      <div class="flash danger">{{ message }}</div>
+      {% elif category == 'info' %}
+      <div class="flash info">{{ message }}</div>
+      {% else %}
+      <div class="flash other">{{ message }}</div>
+      {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <h2>Edit Your Note</h2>
+    <form method="POST">
+      <input type="text" name="title" value="{{ note.title }}" placeholder="Title" required><br>
+      <textarea name="content" rows="5" placeholder="Write your note..." required>{{ note.content }}</textarea><br>
+      <button type="submit">💾 Save Changes</button>
+    </form>
+    <a href="{{ url_for('dashboard') }}">⬅ Back to Dashboard</a>
+  </div>
+</body>
+<script>
+  setTimeout(() => {
+    document.querySelectorAll('.flash')?.forEach(el => {
+      el.style.transition = "opacity 0.5s ease";
+      el.style.opacity = '0';
+      setTimeout(() => el.remove(), 500);
+    });
+  }, 4000);
+</script>
+
+</html>

@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>👤 Profile</title>
+
+  
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 100px 0 80px;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      text-align: center;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #007bff;
+    }
+
+    p {
+      font-size: 1rem;
+      margin: 6px 0;
+    }
+
+    strong {
+      color: #222;
+    }
+
+    a {
+      display: block;
+      color: #007bff;
+      text-decoration: none;
+      margin-top: 12px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #0056b3;
+      text-decoration: underline;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #b02a37;
+    }
+
+    /* ✅ Flash message styling */
+    .flash {
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      color: white;
+      font-size: 0.9rem;
+      animation: fadeSlide 0.3s ease-in-out;
+    }
+
+    .flash.success { background-color: #28a745; }
+    .flash.danger { background-color: #dc3545; }
+    .flash.info { background-color: #17a2b8; }
+    .flash.other { background-color: #6c757d; }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 🖼️ Uploads Grid */
+    .uploads-section {
+      margin-top: 25px;
+    }
+
+    .uploads-section h2 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: #333;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 10px;
+    }
+
+    .media-card {
+      border-radius: 10px;
+      overflow: hidden;
+      background: #f9f9f9;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .media-card img, 
+    .media-card video {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      display: block;
+    }
+    .media-card img:hover
+    {
+    scale: 1.1;
+    transition: .5s;
+
+    }
+    .media-card video:hover{
+    scale: 1.1;
+    transition: .5s;
+    }
+
+    
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: #777;
+      font-size: 0.8rem;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: color 0.3s;
+    }
+
+    .nav-item i {
+      font-size: 1.6rem;
+      margin-bottom: 3px;
+    }
+
+    .nav-item.active, .nav-item:hover {
+      color: #007bff;
+    }
+
+    
+    @media (max-width: 480px) {
+      body { padding: 70px 0 80px; }
+      .container { width: 92%; padding: 20px; }
+      h1 { font-size: 1.3rem; }
+      .gallery { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); }
+    }
+    .delete-btn 
+    {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-top: 6px;
+      width: 100%;
+      transition: background 0.3s ease;
+    }
+
+    .delete-btn:hover 
+    {
+      background-color: #b02a37;
+    }
+    .media-info 
+    {
+      font-size: 0.8rem;
+      color: #555;
+      padding: 5px;
+    }
+    .pfp 
+    {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff;
+    background-image: url("static\\icons8-user-100.png"); 
+    background-size: cover;
+    } 
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div>
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <h1><img src="{{ url_for('static', filename='profile_pics/' + user.profile_pic) }}" class="pfp"></h1>
+    <p><strong>{{ user.username }}</strong></p>
+    <p>📍 {{ user.city }}</p>
+
+    <a href="{{ url_for('edit_profile') }}">Edit Profile</a>
+    <a href="{{ url_for('upload') }}">Upload media</a>
+    <a href="{{url_for('logout')}}">Logout</a>
+
+    <form method="POST" action="{{ url_for('delete_account') }}">
+      <input type="password" name="password" placeholder="Enter password to delete account" required />
+      <button type="submit">Delete Account</button>
+    </form>
+
+    <div class="uploads-section">
+      <h2>📸 Your Uploads</h2>
+      <p><strong>📦 Total uploads:</strong> {{ total_uploads }}</p>
+      <div class="gallery">
+        {% for media in media_files %}
+          <div class="media-card">
+            {% if media.filetype == 'image' %}
+              <img src="{{ url_for('static', filename='uploads/' + media.filename) }}" alt="{{ media.caption }}">
+            {% else %}
+              <video controls>
+                <source src="{{ url_for('static', filename='uploads/' + media.filename) }}" type="video/mp4">
+              </video>
+            {% endif %}
+            <div class="media-info">
+              <p>{{ media.caption or 'No caption' }}</p>
+              <small>Uploaded on {{ media.upload_time.strftime('%b %d, %Y') }}</small>
+            </div>
+            <form method="post" action="{{url_for('delete_media',media_id=media.id)}}" onsubmit="return confirm('Are you sure to delete?')">
+              <button type="submit" class="delete-btn">Delete</button>
+            </form>
+          </div>
+        {% else %}
+          <p style="text-align:center; color:#777;">You haven’t uploaded anything yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 🌈 Bottom Navbar -->
+  <div class="bottom-nav">
+    <a href="{{ url_for('homepage') }}" class="nav-item">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <!-- <a href="{{ url_for('upload') }}" class="nav-item">
+      <i class="fas fa-plus-square"></i>
+      <span>Upload</span>
+    </a> -->
+    <a href="{{ url_for('profile') }}" class="nav-item active">
+      <i class="fas fa-user-circle"></i>
+      <span>Account</span>
+    </a>
+  </div>
+
+  <script>
+    // Auto-hide flash messages
+    setTimeout(() => {
+      document.querySelectorAll('.flash')?.forEach(el => {
+        el.style.transition = "opacity 0.5s ease";
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 500);
+      });
+    }, 4000);
+  </script>
+
+</body>
+</html>
