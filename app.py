@@ -482,7 +482,7 @@ def logout():
     session.clear()
     print("logged out")
     return redirect(url_for('login'))
-
+from app import app, db
 with app.app_context():
      db.create_all()
 
